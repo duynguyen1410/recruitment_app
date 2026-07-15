@@ -146,7 +146,7 @@ export default function ApplicationList() {
 
                                         {/* CV link */}
                                         {app.cv_path ? (
-                                            <a href={`http://localhost:5000/${app.cv_path}`} target="_blank" rel="noreferrer"
+                                            <a href={app.cv_path} target="_blank" rel="noreferrer"
                                                 style={{ display: 'flex', alignItems: 'center', gap: 5, fontSize: '0.78rem', color: 'var(--c-primary)', textDecoration: 'none', whiteSpace: 'nowrap' }}>
                                                 <FileText size={13} /> Xem CV <ExternalLink size={11} />
                                             </a>
