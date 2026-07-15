@@ -4,11 +4,12 @@ const cloudinary = require('../services/cloudinaryService')
 
 const storage = new CloudinaryStorage({
     cloudinary,
-    params: {
+    params: async (req, file) => ({
         folder: 'recruitment/cv',
-        allowed_formats: ['pdf'],
-        resource_type: 'auto',
-    },
+        resource_type: 'raw',
+        format: 'pdf',
+        flags: 'attachment:false',
+    }),
 })
 
 module.exports = multer({
