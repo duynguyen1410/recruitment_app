@@ -161,7 +161,7 @@ export default function ApplicationList() {
                                         {viewingCV === app.id && app.cv_path && (
                                             <div style={{ border: '1px solid var(--c-border)', borderTop: 'none', borderRadius: '0 0 8px 8px', overflow: 'hidden' }}>
                                                 <iframe
-                                                    src={app.cv_path}
+                                                    src={`https://docs.google.com/viewer?url=${encodeURIComponent(app.cv_path)}&embedded=true`}
                                                     width="100%"
                                                     height="600px"
                                                     style={{ display: 'block', border: 'none' }}
