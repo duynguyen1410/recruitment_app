@@ -7,7 +7,7 @@ const storage = new CloudinaryStorage({
     params: {
         folder: 'recruitment/cv',
         allowed_formats: ['pdf'],
-        resource_type: 'raw',
+        resource_type: 'auto',
     },
 })
 
