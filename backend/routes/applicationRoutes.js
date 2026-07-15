@@ -24,8 +24,7 @@ router.post('/', verifyToken, verifyRole(['candidate']),
             )
             if (existing.length > 0)
                 return res.status(400).json({ message: 'Bạn đã nộp hồ sơ cho vị trí này rồi' })
-
-            const cvPath = req.file ? req.file.path.replace(/\\/g, '/') : null
+            const cvPath = req.file ? req.file.path : null
             const [result] = await db.promise().query(
                 'INSERT INTO applications (job_id, candidate_id, cv_path, cover_letter) VALUES (?, ?, ?, ?)',
                 [job_id, req.user.id, cvPath, cover_letter || null]
