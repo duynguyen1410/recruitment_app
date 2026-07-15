@@ -5,6 +5,7 @@ const db = require('../db')
 
 const genAI = new GoogleGenerativeAI(process.env.AI_API_KEY)
 const model = genAI.getGenerativeModel({ model: 'gemini-flash-lite-latest' })
+const axios = require('axios')
 
 // ── Hàm dùng chung ─────────────────────────────────────────────
 async function callGemini(prompt) {
@@ -30,9 +31,10 @@ async function scoreCV(applicationId) {
     // Đọc nội dung CV PDF
     let cvText = '(Không đọc được nội dung CV)'
     try {
-        const pdfBuffer = fs.readFileSync(cv_path)
+        const response = await axios.get(cv_path, { responseType: 'arraybuffer' })
+        const pdfBuffer = Buffer.from(response.data)
         const pdfData = await pdfParse(pdfBuffer)
-        cvText = pdfData.text.slice(0, 3000) // giới hạn để tránh vượt token
+        cvText = pdfData.text.slice(0, 3000)
     } catch (e) {
         console.error('pdf-parse error:', e.message)
     }
