@@ -6,10 +6,8 @@ const storage = new CloudinaryStorage({
     cloudinary,
     params: {
         folder: 'recruitment/cv',
-        resource_type: 'image',
-        format: 'jpg',
-        transformation: [{ width: 1200, crop: 'limit' }],
-        pages: true,  // ← lưu tất cả trang
+        allowed_formats: ['pdf'],
+        resource_type: 'raw',
     },
 })
 
