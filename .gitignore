@@ -1,0 +1,6 @@
+node_modules/
+backend/.env
+backend/uploads/
+frontend/.env.local
+frontend/.env.production
+frontend/dist/
