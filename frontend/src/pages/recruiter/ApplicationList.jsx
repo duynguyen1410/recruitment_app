@@ -14,6 +14,7 @@ export default function ApplicationList() {
     const [loading, setLoading] = useState(true)
     const [filter, setFilter] = useState('all')
     const [updating, setUpdating] = useState(null)
+    const [viewingCV, setViewingCV] = useState(null)
 
     useEffect(() => {
         Promise.all([
@@ -101,58 +102,72 @@ export default function ApplicationList() {
                         ) : (
                             <div style={{ display: 'flex', flexDirection: 'column', gap: '0.6rem' }}>
                                 {filtered.map(app => (
-                                    <div key={app.id} className="card" style={{ padding: '1rem 1.25rem', display: 'grid', gridTemplateColumns: '1fr auto auto auto', alignItems: 'center', gap: '1rem' }}>
+                                    <div key={app.id} style={{ display: 'flex', flexDirection: 'column', gap: 0 }}>
+                                        <div className="card" style={{ padding: '1rem 1.25rem', display: 'grid', gridTemplateColumns: '1fr auto auto auto', alignItems: 'center', gap: '1rem' }}>
 
-                                        {/* Candidate info */}
-                                        <div>
-                                            <p style={{ fontWeight: 500, fontSize: '0.9rem', color: 'var(--c-text)', marginBottom: '0.15rem' }}>
-                                                {app.candidate_name}
-                                            </p>
-                                            <p style={{ fontSize: '0.78rem', color: 'var(--c-text-muted)' }}>{app.candidate_email}</p>
-                                        </div>
+                                            {/* Candidate info */}
+                                            <div>
+                                                <p style={{ fontWeight: 500, fontSize: '0.9rem', color: 'var(--c-text)', marginBottom: '0.15rem' }}>
+                                                    {app.candidate_name}
+                                                </p>
+                                                <p style={{ fontSize: '0.78rem', color: 'var(--c-text-muted)' }}>{app.candidate_email}</p>
+                                            </div>
 
-                                        {/* AI Score */}
-                                        <div style={{ textAlign: 'center', minWidth: 60 }}>
-                                            {app.ai_score !== null ? (
-                                                <>
-                                                    <p style={{ fontSize: '1.1rem', fontWeight: 700, color: scoreColor(app.ai_score), lineHeight: 1 }}>
-                                                        {app.ai_score}
-                                                    </p>
-                                                    <p style={{ fontSize: '0.65rem', color: 'var(--c-text-muted)' }}>AI score</p>
-                                                </>
+                                            {/* AI Score */}
+                                            <div style={{ textAlign: 'center', minWidth: 60 }}>
+                                                {app.ai_score !== null ? (
+                                                    <>
+                                                        <p style={{ fontSize: '1.1rem', fontWeight: 700, color: scoreColor(app.ai_score), lineHeight: 1 }}>
+                                                            {app.ai_score}
+                                                        </p>
+                                                        <p style={{ fontSize: '0.65rem', color: 'var(--c-text-muted)' }}>AI score</p>
+                                                    </>
+                                                ) : (
+                                                    <span style={{ fontSize: '0.75rem', color: 'var(--c-text-muted)' }}>—</span>
+                                                )}
+                                            </div>
+
+                                            {/* Status + change */}
+                                            <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
+                                                <StatusBadge status={app.status} size="sm" />
+                                                <select
+                                                    value={app.status}
+                                                    onChange={e => handleStatusChange(app.id, e.target.value)}
+                                                    disabled={updating === app.id}
+                                                    style={{
+                                                        fontSize: '0.75rem', padding: '0.25rem 0.5rem',
+                                                        border: '1px solid var(--c-border)', borderRadius: 6,
+                                                        background: 'var(--c-surface)', color: 'var(--c-text)',
+                                                        cursor: 'pointer', outline: 'none',
+                                                    }}
+                                                >
+                                                    {STATUSES.map(s => <option key={s} value={s}>{s}</option>)}
+                                                </select>
+                                                {updating === app.id && <Loader2 size={12} style={{ animation: 'spin 0.7s linear infinite', color: 'var(--c-primary)' }} />}
+                                            </div>
+
+                                            {/* CV link */}
+                                            {app.cv_path ? (
+                                                <button
+                                                    onClick={() => setViewingCV(viewingCV === app.id ? null : app.id)}
+                                                    style={{ display: 'flex', alignItems: 'center', gap: 5, fontSize: '0.78rem', color: 'var(--c-primary)', background: 'none', border: 'none', cursor: 'pointer', whiteSpace: 'nowrap' }}>
+                                                    <FileText size={13} /> {viewingCV === app.id ? 'Đóng CV' : 'Xem CV'} <ExternalLink size={11} />
+                                                </button>
                                             ) : (
-                                                <span style={{ fontSize: '0.75rem', color: 'var(--c-text-muted)' }}>—</span>
+                                                <span style={{ fontSize: '0.75rem', color: 'var(--c-text-muted)' }}>Không có CV</span>
                                             )}
                                         </div>
-
-                                        {/* Status + change */}
-                                        <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
-                                            <StatusBadge status={app.status} size="sm" />
-                                            <select
-                                                value={app.status}
-                                                onChange={e => handleStatusChange(app.id, e.target.value)}
-                                                disabled={updating === app.id}
-                                                style={{
-                                                    fontSize: '0.75rem', padding: '0.25rem 0.5rem',
-                                                    border: '1px solid var(--c-border)', borderRadius: 6,
-                                                    background: 'var(--c-surface)', color: 'var(--c-text)',
-                                                    cursor: 'pointer', outline: 'none',
-                                                }}
-                                            >
-                                                {STATUSES.map(s => <option key={s} value={s}>{s}</option>)}
-                                            </select>
-                                            {updating === app.id && <Loader2 size={12} style={{ animation: 'spin 0.7s linear infinite', color: 'var(--c-primary)' }} />}
-                                        </div>
-
-                                        {/* CV link */}
-                                        {app.cv_path ? (
-                                            <a href={`https://docs.google.com/viewer?url=${encodeURIComponent(app.cv_path)}`}
-                                                target="_blank" rel="noreferrer"
-                                                style={{ display: 'flex', alignItems: 'center', gap: 5, fontSize: '0.78rem', color: 'var(--c-primary)', textDecoration: 'none', whiteSpace: 'nowrap' }}>
-                                                <FileText size={13} /> Xem CV <ExternalLink size={11} />
-                                            </a>
-                                        ) : (
-                                            <span style={{ fontSize: '0.75rem', color: 'var(--c-text-muted)' }}>Không có CV</span>
+                                        {/* CV iframe */}
+                                        {viewingCV === app.id && app.cv_path && (
+                                            <div style={{ border: '1px solid var(--c-border)', borderTop: 'none', borderRadius: '0 0 8px 8px', overflow: 'hidden' }}>
+                                                <iframe
+                                                    src={app.cv_path}
+                                                    width="100%"
+                                                    height="600px"
+                                                    style={{ display: 'block', border: 'none' }}
+                                                    title="CV Preview"
+                                                />
+                                            </div>
                                         )}
                                     </div>
                                 ))}
