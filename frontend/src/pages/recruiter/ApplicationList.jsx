@@ -159,14 +159,16 @@ export default function ApplicationList() {
                                         </div>
                                         {/* CV iframe */}
                                         {viewingCV === app.id && app.cv_path && (
-                                            <div style={{ border: '1px solid var(--c-border)', borderTop: 'none', borderRadius: '0 0 8px 8px', overflow: 'hidden' }}>
-                                                <iframe
-                                                    src={`https://docs.google.com/viewer?url=${encodeURIComponent(app.cv_path)}&embedded=true`}
-                                                    width="100%"
-                                                    height="600px"
-                                                    style={{ display: 'block', border: 'none' }}
-                                                    title="CV Preview"
-                                                />
+                                            <div style={{ border: '1px solid var(--c-border)', borderTop: 'none', borderRadius: '0 0 8px 8px', padding: '1rem', background: '#f9f9f9' }}>
+                                                {[1, 2, 3, 4, 5].map(page => (
+                                                    <img
+                                                        key={page}
+                                                        src={app.cv_path.replace('/upload/', `/upload/pg_${page}/`)}
+                                                        alt={`CV trang ${page}`}
+                                                        style={{ width: '100%', borderRadius: 4, marginBottom: 8 }}
+                                                        onError={e => e.target.style.display = 'none'}  // ← ẩn nếu không có trang
+                                                    />
+                                                ))}
                                             </div>
                                         )}
                                     </div>
