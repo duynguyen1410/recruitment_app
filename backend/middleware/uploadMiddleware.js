@@ -1,19 +1,17 @@
 const multer = require('multer')
-const path = require('path')
+const { CloudinaryStorage } = require('multer-storage-cloudinary')
+const cloudinary = require('../services/cloudinaryService')
 
-const storage = multer.diskStorage({
-    destination: (req, file, cb) => cb(null, 'uploads/'),
-    filename: (req, file, cb) => {
-        const unique = Date.now() + '-' + Math.round(Math.random() * 1e9)
-        cb(null, unique + path.extname(file.originalname))
-    }
+const storage = new CloudinaryStorage({
+    cloudinary,
+    params: {
+        folder: 'recruitment/cv',
+        allowed_formats: ['pdf'],
+        resource_type: 'raw',
+    },
 })
 
 module.exports = multer({
     storage,
-    limits: { fileSize: 5 * 1024 * 1024 },   // 5MB
-    fileFilter: (req, file, cb) => {
-        if (file.mimetype === 'application/pdf') cb(null, true)
-        else cb(new Error('Chỉ chấp nhận file PDF'))
-    }
+    limits: { fileSize: 5 * 1024 * 1024 },
 })
