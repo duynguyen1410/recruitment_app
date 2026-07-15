@@ -14,7 +14,7 @@ export default function ApplicationList() {
     const [loading, setLoading] = useState(true)
     const [filter, setFilter] = useState('all')
     const [updating, setUpdating] = useState(null)
-    const [viewingCV, setViewingCV] = useState(null)
+
 
     useEffect(() => {
         Promise.all([
@@ -148,13 +148,33 @@ export default function ApplicationList() {
 
                                             {/* CV link */}
                                             {app.cv_path ? (
-                                                <button
-                                                    onClick={() => setViewingCV(viewingCV === app.id ? null : app.id)}
-                                                    style={{ display: 'flex', alignItems: 'center', gap: 5, fontSize: '0.78rem', color: 'var(--c-primary)', background: 'none', border: 'none', cursor: 'pointer', whiteSpace: 'nowrap' }}>
-                                                    <FileText size={13} /> {viewingCV === app.id ? 'Đóng CV' : 'Xem CV'} <ExternalLink size={11} />
-                                                </button>
+                                                <a
+                                                    href={app.cv_path}
+                                                    target="_blank"
+                                                    rel="noreferrer"
+                                                    style={{
+                                                        display: 'flex',
+                                                        alignItems: 'center',
+                                                        gap: 5,
+                                                        fontSize: '0.78rem',
+                                                        color: 'var(--c-primary)',
+                                                        textDecoration: 'none',
+                                                        whiteSpace: 'nowrap'
+                                                    }}
+                                                >
+                                                    <FileText size={13} />
+                                                    Tải CV
+                                                    <ExternalLink size={11} />
+                                                </a>
                                             ) : (
-                                                <span style={{ fontSize: '0.75rem', color: 'var(--c-text-muted)' }}>Không có CV</span>
+                                                <span
+                                                    style={{
+                                                        fontSize: '0.75rem',
+                                                        color: 'var(--c-text-muted)'
+                                                    }}
+                                                >
+                                                    Không có CV
+                                                </span>
                                             )}
                                         </div>
 
